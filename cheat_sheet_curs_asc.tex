@@ -1,0 +1,114 @@
+\documentclass[a4paper]{article}
+
+% --- ESSENTIAL PACKAGES FOR COMPACTION ---
+\usepackage[a4paper, margin=0.1in]{geometry} % set tight margins
+\usepackage{multicol}      % create a multi-column layout
+\usepackage[tiny]{titlesec}      % customize section/subsection titles
+\usepackage{paralist}      % creating compact lists
+\usepackage{amsmath}       % math environments
+
+% --- UTILITY & STYLING PACKAGES ---
+\usepackage{xcolor}        % custom colors
+\usepackage{graphicx}      % images
+\usepackage{listings}      % code snippets
+\usepackage{hyperref}      % clickable links
+
+% --- COLOR DEFINITIONS ---
+\definecolor{codegray}{rgb}{0.9,0.9,0.9} % code background
+\definecolor{darkblue}{rgb}{0.0,0.0,0.5} % for comments
+\definecolor{defbox_bg}{rgb}{0.9, 0.9, 1.0} % definition box background
+\definecolor{defbox_fr}{rgb}{0.3, 0.3, 0.7} % frame
+
+% --- GLOBAL LAYOUT & SPACING CONFIGURATION ---
+
+% set paragraph spacing: no indent, with tiny vertical gap between paragraphs
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5ex}
+
+% make section and subsection titles extremely compact
+\titlespacing*{\section}{0pt}{1.2ex}{0.8ex}
+\titlespacing*{\subsection}{0pt}{1ex}{0.5ex}
+\titleformat*{\section}{\bfseries\large}
+\titleformat*{\subsection}{\bfseries\normalsize}
+\setcounter{secnumdepth}{0}
+
+% make lists as compact as possible
+\let\itemize\compactitem
+\let\enditemize\endcompactitem
+\let\enumerate\compactenum
+\let\endenumerate\endcompactenum
+
+% --- CODE LISTING STYLE ---
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{codegray},   
+    commentstyle=\color{darkblue},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{gray},
+    stringstyle=\color{red},
+    basicstyle=\ttfamily\tiny,
+    breaklines=true,
+    numbers=left,                    
+    numbersep=4pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% --- HYPERREF SETUP---
+\hypersetup{
+    colorlinks=true, linkcolor=blue, urlcolor=cyan,
+}
+
+% --- CUSTOM COMMANDS/ENVIRONMENTS ---
+% tight box for definitions
+\newenvironment{definition}[1]
+    {\par\noindent\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black,title=#1,fonttitle=\bfseries,boxsep=1mm,left=1mm,right=1mm,top=1mm,bottom=1mm]}
+    {\end{tcolorbox}}
+
+% simpler alternative w/o tcolorbox
+% \newcommand{\definition}[2]{\par\noindent\fcolorbox{defbox_fr}{defbox_bg}{\begin{minipage}{0.95\columnwidth}\textbf{#1:} #2\end{minipage}}\par}
+
+\begin{document}
+
+% --- CUSTOM, MINIMAL TITLE ---
+\noindent
+\textbf{\small Cheat Sheet - Curs ASC}
+\hrule
+\vspace{1ex}
+
+% --- GLOBAL SETTINGS FOR THE DOCUMENT BODY ---
+\pagestyle{empty}
+\footnotesize
+\section{Curs 0x01}
+
+\section{Curs 0x02}
+$$I(x_i) = log_2(\frac{1}{p_i}) H(X) = E(I(X)) = \sum_{i = 1}^{N}p_i log_2\frac{1}{p_i} = \sum_{i = 1}^{N} - p_i log_2 p_i$$
+
+
+\section{Curs 0x03}
+
+\section{Curs 0x04}
+
+\section{Curs 0x05}
+
+\section{Curs 0x06}
+
+\section{Curs 0x07}
+
+\section{Curs 0x08}
+
+\section{Curs 0x09}
+
+\section{Curs 0x0A}
+
+\begin{multicols}{2}
+
+
+% \begin{definition}{titlu}
+% \end{definition}
+
+
+\end{multicols}
+\end{document}
