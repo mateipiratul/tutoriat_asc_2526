@@ -24,7 +24,6 @@
 \definecolor{darkblue}{rgb}{0,0,0.5}
 
 \setlength{\tabcolsep}{2pt}
-\renewcommand{\arraystretch}{0.8}
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{codegray},   
@@ -47,9 +46,13 @@
     colorlinks=true,
     linkcolor=blue,
     filecolor=magenta,      
-    urlcolor=cyan,
+    urlcolor=blue,
 }
 \setlist[itemize]{nosep}
+
+\newcommand{\hl}[1]{\textcolor{violet}{\textit{#1}}}
+\renewcommand{\arraystretch}{0.8}
+\newcommand{\tabletitle}[1]{\multicolumn{2}{c}{\textbf{#1}}}
 
 \title{\huge Curs Arhitectura Sistemelor de Calcul - FMI}
 \author{
@@ -59,12 +62,11 @@
   Ștefan Chiper\\
   \texttt{stefan.chiper@s.unibuc.ro}
 } \date{}
-
-\newcommand{\hl}[1]{\textcolor{cyan}{\textit{#1}}}
+\renewcommand*\contentsname{\large\bfseries Cuprins}
 
 \begin{document}
 \maketitle
-\setcounter{tocdepth}{0}
+\setcounter{tocdepth}{2}
 \tableofcontents
 \thispagestyle{empty}
 \newpage
@@ -106,7 +108,7 @@
 \subsection{Scurt istoric al sistemelor de calcul}
 \begin{multicols}{2}
 \subsubsection{Blaise Pascal (1623 - 1662)}
-În 1642, crează \textbf{Pascaline}: un calculator mecanic capabil de adunări și scăderi (utilizat pentru calcul de taxe). Nefiind o mașină practică, mai puțin de 50 de astfel de mașini au fost create, fiind utilizată mai degrabă pe post de "jucărie" a aristocraților. Bineînțeles, acesta a fost un important contribuitor al secolului XVII în materie de contribuții, limbajul \textbf{Pascal} fiind numit astfel în onoarea acestuia. 
+În 1642, crează \textbf{Pascaline}: un calculator mecanic capabil de adunări și scăderi (utilizat pentru calcul de taxe). Nefiind o mașină practică, mai puțin de 50 de astfel de mașini au fost create, fiind utilizată mai degrabă pe post de "jucărie" a aristocraților. Bineînțeles, acesta a fost un important contribuitor al secolului XVII, limbajul \textbf{Pascal} fiind numit în onoarea acestuia. 
 \subsubsection{Gottfried Wilhelm Von Leibniz (1646 - 1716)}
 Având contribuții numeroase în domenii precum , două dintre contribuțiile sale majore în acest domeniu fiind:
 \begin{itemize}
@@ -207,9 +209,9 @@ Considerat unul dintre cei mai influenți matematicieni ai ultimului secol, John
     \item sistem de numărare cu \hl{baza B = 2}
     \item avem disponibile două cifre: \hl{0} și \hl{1}
 \end{itemize}
-\vspace{0.15cm}
-$x = \sum_{i=0}^{N-1} b_i 2^i$
 \vspace{0.1cm}
+$x = \sum_{i=0}^{N-1} b_i 2^i$, unde \hl{N} este numărul de biți folosiți în reprezentare
+\vspace{0.5cm}
 \begin{tabular}{|>{\color{green}}l*{10}{|c}|}
 \hline
 bit $b_i$: & \cellcolor{blue!50}\color{white}0 
@@ -221,23 +223,137 @@ bit $b_i$: & \cellcolor{blue!50}\color{white}0
             & \cellcolor{blue!50}\color{white}0 
             & \cellcolor{blue!50}\color{white}0 
             & \cellcolor{blue!50}\color{white}1 \\ \hline
-        & {\color{green}2$^i$:} 
+        {\color{green}2$^i$:} 
             & $2^8$ & $2^7$ & $2^6$ & $2^5$ & $2^4$ & $2^3$ & $2^2$ & $2^1$ & $2^0$ \\
 \hline
 \end{tabular}
 
-\noindent În exemplul de mai sus: $0 \times 2^8 + 1 \times 2^7 + 1 \times 2^6 + 1 \times 2^5 + 1 \times 2^4 + 0 \times 2^3 + 0 \times 2^2 + 0 \times 2^1 + 1 \times 2^0 = 241$ \hspace{1cm} (avem \textit{N = 9}, dar în realitate se poate reduce la \textit{N = 8}).
+\noindent În exemplul de mai sus: $0 \times 2^8 + 1 \times 2^7 + 1 \times 2^6 + 1 \times 2^5 + 1 \times 2^4 + 0 \times 2^3 + 0 \times 2^2 + 0 \times 2^1 + 1 \times 2^0 = 241$ \hspace{1cm} (avem \textit{N = 9}, dar în realitate se poate reduce la \textit{N = 8})
+\vspace{0.15cm}
 
 \noindent Intuiția noastră este în baza \textit{B = 10}, dar este folositor să abstractizăm și să considerăm baza generală \textit{B}; așadar, în baza \textit{B} avem:
 \begin{itemize}
     \item cifre de la \textit{0} la \textit{B-1} (restul se numesc numere)
     \item reprezentarea este $x = \sum_{i=0}^{N-1} b_i B^i$
+    \item bitul $b_0$ se numește \hl{Least Significant Bit (LSB)} iar bitul $b_{N-1}$ se numește \hl{Most Significant Bit (MSB)}
+    \item reprezentarea unui număr din baza 10 în baza B se face prin \textit{împărțiri succesive cu B și păstrare de rest}
 \end{itemize}
+\noindent \hl{\textbf{Regula generală:} când trecem din baza B în baza $B^p$ trebuie doar să grupăm noul număr în câte p cifre}
+\vspace{0.15cm}
 
+\textbf{Numere întregi negative}
+\begin{tabular}{|>{\color{green}}l*{10}{|c}|}
+\hline
+bit $b_i$: & \cellcolor{blue!50}\color{white}1 
+            & \cellcolor{blue!50}\color{white}1 
+            & \cellcolor{blue!50}\color{white}1 
+            & \cellcolor{blue!50}\color{white}1 
+            & \cellcolor{blue!50}\color{white}0 
+            & \cellcolor{blue!50}\color{white}0 
+            & \cellcolor{blue!50}\color{white}0  
+            & \cellcolor{blue!50}\color{white}1 \\ \hline
+        {\color{green}2$^i$:} 
+            & $-2^7$ & $2^6$ & $2^5$ & $2^4$ & $2^3$ & $2^2$ & $2^1$ & $2^0$ \\
+\hline
+\end{tabular}
 
 $x = - b_{n-1} 2^{n-1} + \sum_{i=0}^{n-2}b_i 2^i$
 
+\noindent În exemplul de mai sus: $-1 \times 2^7 + 1 \times 2^6 + 1 \times 2^5 + 1 \times 2^4 + 0 \times 2^3 + 0 \times 2^2 + 0 \times 2^1 + 1 \times 2^0 = -15$
 \end{multicols}
+
+\begin{wrapfigure}
+{r}{0.3\textwidth}
+    \centering
+    \includegraphics[width=0.25\textwidth]{resources/cerc_num_intregi.png}
+\end{wrapfigure}
+\noindent \textbf{Reprezentarea în complement față de 2:}
+\begin{itemize}
+    \item numere în intervalul $[-2^{N-1}, 2^{N-1}-1]$
+    \item se pierde un bit pentru semn, dar este optim: \textbf{MSB} este semnul, \textbf{restul biților} reprezintă valoarea
+    \item pentru a obține reprezentarea în complement față de 2 a unui număr negativ, se inversează toți biții și se adaugă 1
+    \item motivul pentru care folosim acest sistem în complement față de 2 este că \hl{algoritmul de adunare} este la fel ca pentru numere naturale
+\end{itemize}
+\vspace{0.2cm}
+
+\noindent \textbf{Adunări/Scăderi} pe numere naturale și întregi:
+\begin{itemize}
+    \item se adună bit cu bit, de la LSB la MSB; se păstrează un \textbf{carry} dacă suma depășește baza (2)
+    \item \textbf{Overflow} apare când rezultatul nu poate fi reprezentat cu numărul de biți alocați
+    \item \textbf{Underflow} apare când rezultatul este mai mic decât cel mai mic număr reprezentabil
+\end{itemize}
+\hrule
+\vspace{0.2cm}
+\noindent \textbf{Extinderea} numărului de biți:
+\begin{itemize}
+    \item \textbf{Zero-Extension} - pentru numere naturale, se adaugă biți 0 în partea stângă (e.g., 6 biți $\rightarrow$ 8 biți: 001101 $\rightarrow$ 00001101)
+    \item \textbf{Sign-Extension} - pentru numere întregi, se adaugă biți egali cu MSB în partea stângă (e.g., 6 biți $\rightarrow$ 8 biți: 111101 $\rightarrow$ 11111101)
+\end{itemize}
+
+Logica binară (unde 0 = False, 1 = True) implică operații de bază esențiale în arhitectura sistemelor de calcul pentru funcționarea circuitelor digitale și a procesorului: NOT \hl{(negație)}, AND \hl{(conjuncție)}, OR \hl{(disjuncție)} și XOR \hl{(disjuncție exclusivă)}.
+\vspace{0.3cm}
+
+\begin{center}
+\begin{minipage}[t]{0.24\textwidth}
+    \centering
+    \begin{tabular}{|c|c|}
+        \hline
+        \multicolumn{2}{|c|}{\textbf{NOT}} \\
+        \hline
+        \textbf{A} & \textbf{$\neg$ A} \\
+        \hline
+        0 & 1 \\
+        1 & 0 \\
+        \hline
+    \end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}
+    \centering
+    \begin{tabular}{|c c|c|}
+        \hline
+        \multicolumn{3}{|c|}{\textbf{AND}} \\
+        \hline
+        \textbf{A} & \textbf{B} & \textbf{A $\land$ B} \\
+        \hline
+        0 & 0 & 0 \\
+        0 & 1 & 0 \\
+        1 & 0 & 0 \\
+        1 & 1 & 1 \\
+        \hline
+    \end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}
+    \centering
+    \begin{tabular}{|c c|c|}
+        \hline
+        \multicolumn{3}{|c|}{\textbf{OR}} \\
+        \hline
+        \textbf{A} & \textbf{B} & \textbf{A $\lor$ B} \\
+        \hline
+        0 & 0 & 0 \\
+        0 & 1 & 1 \\
+        1 & 0 & 1 \\
+        1 & 1 & 1 \\
+        \hline
+    \end{tabular}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.24\textwidth}
+    \centering
+    \begin{tabular}{|c c|c|}
+        \hline
+        \multicolumn{3}{|c|}{\textbf{XOR}} \\
+        \hline
+        \textbf{A} & \textbf{B} & \textbf{A $\oplus$ B} \\
+        \hline
+        0 & 0 & 0 \\
+        0 & 1 & 1 \\
+        1 & 0 & 1 \\
+        1 & 1 & 0 \\
+        \hline
+    \end{tabular}
+\end{minipage}
+\end{center}
+
 
 \subsection{Lectură suplimentară}
 \begin{itemize}
@@ -262,9 +378,9 @@ $x = - b_{n-1} 2^{n-1} + \sum_{i=0}^{n-2}b_i 2^i$
 \section{Teoria Informației}
 \subsection{Măsurarea cantității de informație}
 
-\subsection{Entropia lui Shannon}
+\subsection{Codarea Datelor - Entropia lui Shannon}
 
-\subsection{Detectarea/Corectarea erorilor}
+\subsection{Detectarea/Corectarea Erorilor}
 \begin{enumerate}
     \item 
 \end{enumerate}

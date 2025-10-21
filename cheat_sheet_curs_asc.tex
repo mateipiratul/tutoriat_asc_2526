@@ -30,7 +30,7 @@
 \titlespacing*{\subsection}{0pt}{1ex}{0.5ex}
 \titleformat*{\section}{\bfseries\large}
 \titleformat*{\subsection}{\bfseries\normalsize}
-\setcounter{secnumdepth}{0}
+\setcounter{secnumdepth}{0} % disable section numbering
 
 % make lists as compact as possible
 \let\itemize\compactitem
@@ -70,38 +70,42 @@
 % simpler alternative w/o tcolorbox
 % \newcommand{\definition}[2]{\par\noindent\fcolorbox{defbox_fr}{defbox_bg}{\begin{minipage}{0.95\columnwidth}\textbf{#1:} #2\end{minipage}}\par}
 
+\newcommand{\smallection}[1]{\section{\small #1}}
+
 \begin{document}
 
 % --- CUSTOM, MINIMAL TITLE ---
 \noindent
 \textbf{\small Cheat Sheet - Curs ASC}
+\vspace{0.15ex}
 \hrule
-\vspace{1ex}
+\vspace{0.55ex}
 
 % --- GLOBAL SETTINGS FOR THE DOCUMENT BODY ---
 \pagestyle{empty}
 \footnotesize
-\section{Curs 0x01}
 
-\section{Curs 0x02}
-$$I(x_i) = log_2(\frac{1}{p_i}) H(X) = E(I(X)) = \sum_{i = 1}^{N}p_i log_2\frac{1}{p_i} = \sum_{i = 1}^{N} - p_i log_2 p_i$$
+\smallection{ Curs 0x01}
+
+\smallection{Curs 0x02}
+$I(x_i) = log_2(\frac{1}{p_i}) H(X) = E(I(X)) = \sum_{i = 1}^{N}p_i log_2\frac{1}{p_i} = \sum_{i = 1}^{N} - p_i log_2 p_i$
 
 
-\section{Curs 0x03}
+\smallection{Curs 0x03}
 
-\section{Curs 0x04}
+\smallection{Curs 0x04}
 
-\section{Curs 0x05}
+\smallection{Curs 0x05}
 
-\section{Curs 0x06}
+\smallection{Curs 0x06}
 
-\section{Curs 0x07}
+\smallection{Curs 0x07}
 
-\section{Curs 0x08}
+\smallection{Curs 0x08}
 
-\section{Curs 0x09}
+\smallection{Curs 0x09}
 
-\section{Curs 0x0A}
+\smallection{Curs 0x0A}
 
 \begin{multicols}{2}
 
