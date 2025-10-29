@@ -1,0 +1,1067 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- PACHETE ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[romanian]{babel}
+\usepackage[
+    a4paper,           % Tipul hârtiei
+    top=1.75cm,           % Marginea de sus
+    bottom=2cm,        % Marginea de jos
+    left=1.25cm,        % Marginea din stânga
+    right=1.25cm          % Marginea din dreapta
+]{geometry}
+\usepackage{listings}
+\usepackage[inline]{enumitem}
+\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage{multicol}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.98,0.98,0.98}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\lstdefinelanguage{x86asm}{
+  keywords={mov, movl, movb, add, addl, sub, subl, mul, imul, div, divl, idivl, cdq, int, jmp, je, jne, jg, jl, jge, jle, cmp, cmpl, lea, leal, loop, inc, dec, shr, shl, sal, push, pop, call, ret, .global, .text, .data, .asciz, .ascii, .long, .word, .byte, .space},
+  morecomment=[l]{\#}, 
+  sensitive=false
+}
+
+% --- TITLU ---
+\title{Compilație Probleme Laborator ASC \\ (x86 AT\&T Syntax)}
+\author{}
+\date{}
+\setcounter{tocdepth}{2}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+% \setlength{\columnsep}{0.5cm}
+% \begin{multicols}{2}
+
+\section{Test Laborator 2.1 / 2.2 / 2.3}
+
+% --- Întrebarea 1 (din 2.1/2.2) ---
+\subsection*{Întrebarea 1}
+Ce valoare va reține EAX după executarea următoarei secvențe de instrucțiuni?
+
+\begin{lstlisting}[language=x86asm]
+movl $0, %eax
+movb $4, %ah
+movb $2, %al
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 258
+    \item 516 (sau 513)
+    \item 0
+    \item 1026
+\end{itemize*}
+
+% --- Întrebarea 2 (din 2.1/2.2) ---
+\subsection*{Întrebarea 2}
+Se consideră declarate \texttt{x: .word 1} și \texttt{y: .word 2} (sau \texttt{x: .word 1, y: .word 0, z: .word 2}). Ce valoare va avea eax după executarea instrucțiunii \texttt{mov x, \%eax}?
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 2
+    \item 0x00020001
+    \item 1 
+\end{itemize*}
+
+% --- Întrebarea 3 (din 2.1/2.2) ---
+\subsection*{Întrebarea 3}
+Fie următoarea declarare în secțiunea .data:
+\begin{lstlisting}[language=x86asm]
+str1: .ascii "abc"
+str2: .ascii "123" # (sau .ascii "1")
+\end{lstlisting}
+
+
+Ce se va afișa în urma apelului WRITE următor?
+\begin{lstlisting}[language=x86asm]
+movl $4, %eax
+movl $1, %ebx
+movl $str1, %ecx
+movl $5, %edx  # (sau $4, %edx)
+int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni (pentru testul cu "123" și edx=5):}
+\begin{itemize*}
+    \item abc
+    \item nimic
+    \item abc + o valoare reziduală
+    \item abc12 
+\end{itemize*}
+
+\textbf{Opțiuni (pentru testul cu "1" și edx=4):}
+\begin{itemize*}
+    \item abc
+    \item nimic
+    \item abc + o valoare reziduală
+    \item abc1 
+\end{itemize*}
+
+% --- Întrebarea 4 (din 2.1/2.2) ---
+\subsection*{Întrebarea 4}
+Fie programul următor. Ce valoare va fi afișată în \%eax în urma rulării comenzilor \texttt{b main}, \texttt{run}, \texttt{stepi}, \texttt{stepi}, \texttt{i r}?
+
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 2.1/2.2)}]
+.data
+    x: .long 0x04030201
+    y: .long 0x08070605
+.text
+.global main
+main:
+    mov x, %eax
+    mov y, %al  # (sau %ah)
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni (pentru \texttt{mov y, \%al}):}
+\begin{itemize*}
+    \item 0x04030201
+    \item 0x08070605
+    \item 1
+    \item 0x04030501
+    \item 0x04030205 
+\end{itemize*}
+
+\textbf{Opțiuni (pentru \texttt{mov y, \%ah}):}
+\begin{itemize*}
+    \item 0x04030201
+    \item 0x08070605
+    \item 1
+    \item 0x04030205
+    \item 0x04030501 
+\end{itemize*}
+
+% --- Întrebarea 5 (din 2.3) ---
+\subsection*{Întrebarea 5}
+Ce valoare va reține registrul CH după executarea următoarei instrucțiuni?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 2.3)}]
+movl $553, %ecx
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 10
+    \item 512
+    \item 0
+    \item 2 
+\end{itemize*}
+
+% --- Întrebarea 6 (din 2.3) ---
+\subsection*{Întrebarea 6}
+Fie următoarea declarare în secțiunea .data:
+\begin{lstlisting}[language=x86asm, caption={Declarații .data}]
+str: .ascii "1234"
+x: .byte 97
+\end{lstlisting}
+Ce se va afișa în urma apelului WRITE următor?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 2.3)}]
+movl $4, %eax
+movl $1, %ebx
+movl $str, %ecx
+movl $5, %edx
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 1234
+    \item 12349
+    \item 123497
+    \item 1234a
+\end{itemize*}
+
+% --- Întrebarea 7 (din 2.3) ---
+\subsection*{Întrebarea 7}
+Fie următorul program. Precizați secvența corectă de instrucțiuni în debugger, în urma căreia vom obține valoarea 8.
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 2.3)}]
+.data
+.text
+.global main
+main:
+    movl $8, %eax
+    movl $2048, %ecx
+    et_exit:
+    movl $1, %eax
+    movl $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item \texttt{b main; run; stepi; stepi; i r cl}
+    \item \texttt{b main; run; i r eax}
+    \item \texttt{b main; run; stepi; i r ah}
+    \item \texttt{b main; run; stepi; stepi; i r ch} 
+\end{itemize*}
+
+\newpage
+\section{Test Laborator 3.1 / 3.2}
+
+% --- Întrebarea 1 (din 3.1) ---
+\subsection*{Întrebarea 1}
+Fie codul de mai jos. Care este valoarea lui s c\^and execu\c{t}ia ajunge la \texttt{et\_exit}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 3.1)}]
+.data
+    s: .long 0
+.text
+.global main
+main:
+    mov $1, %edx
+    mov $0, %eax
+    movl $0xffffffff, %ebx
+    divl %ebx
+    mov %eax, %ecx
+
+et_loop:
+    add %ecx, s
+    loop et_loop
+
+et_exit:
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 0
+    \item 0xffffffff
+    \item 15
+    \item 1
+\end{itemize*}
+
+% --- Întrebarea 2 (din 3.1) ---
+\subsection*{Întrebarea 2}
+Se stochează în registrul eax valoarea \texttt{0x40000000}, în ebx \texttt{0x8}, în ecx \texttt{0x1} și în edx \texttt{0x8}. Ce valori vor avea registrii eax si edx dupa executarea instructiunii \texttt{mul \%edx}?
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item eax=32, edx=0
+    \item eax=32, edx=2
+    \item eax=2, edx=0
+    \item eax=0, edx=2
+\end{itemize*}
+
+% --- Întrebarea 3 (din 3.1) ---
+\subsection*{Întrebarea 3}
+Se stochează în \%edx valoarea 0, în eax 47 și în ebx 15. Ce valori vor avea registrii eax si edx dupa executarea instructiunii \texttt{div \%ebx}?
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item eax=3, edx=0
+    \item eax=2, edx=0
+    \item eax=2, edx=3
+    \item eax=3, edx=2
+\end{itemize*}
+
+% --- Întrebarea 4 (din 3.1) ---
+\subsection*{Întrebarea 4}
+Fie codul de mai jos. Care este valoarea depozitată la final în ecx (în dreptul etichetei \texttt{exit})?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 3.1)}]
+.data
+    x: .long 0x80000000
+    y: .long 0x70000000
+.text
+.global main
+main:
+    mov x, %eax
+    cmp y, %eax
+    jge label
+    mov $5, %ecx
+    jmp exit
+label:
+    mov $6, %ecx
+exit:
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 6
+    \item 5
+\end{itemize*}
+
+% --- Întrebarea 5 (din 3.1) ---
+\subsection*{Întrebarea 5}
+Fie următorul program. Ce valoare vom obține dacă vom rula cu debuggerul \texttt{b et\_exit}, \texttt{run}, \texttt{ir ebx}?
+\begin{lstlisting}[language=x86asm]
+.data
+.text
+.global main
+main:
+    mov $3, %eax
+    shl $2, %eax
+    mov $2, %ebx
+    mul %ebx
+    mov $0, %edx
+    mov $8, %ebx
+    div %ebx
+    sub %eax, %ebx
+et_exit:
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 2
+    \item 3
+    \item 8
+    \item 5
+\end{itemize*}
+
+% --- Întrebarea 6 (din 3.1) ---
+\subsection*{Întrebarea 6}
+Care este ordinea de trecere prin etichete?
+\begin{lstlisting}[language=x86asm]
+.data
+.text
+.global main
+main:
+    mov $1, %eax
+    mov $2, %ebx
+    mov $3, %ecx
+    mov $4, %edx
+    cmp %ebx, %eax
+    je etx
+ety:
+    cmp %ecx, %edx
+    jg etz
+    jmp ett
+etx:
+    jmp ety
+etz:
+    mov %ebx, %edx
+    jmp ety
+ett:
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item etx, ety, etz, ety, ett
+    \item etx, ety, ett
+    \item ety, etx, etz, ett
+    \item ety, etz, ety, ett
+\end{itemize*}
+
+% --- Întrebarea 7 (din 3.2) ---
+\subsection*{Întrebarea 7}
+Fie codul de mai jos. Care sunt valorile lui eax și edx când execuția ajunge la \texttt{label}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 3.2)}]
+.data
+    x: .long 17
+    y: .long 6
+.test
+.global main
+main:
+    mov $1, %edx
+    mov x, %eax
+    jmp et
+    mov $0, %edx
+et:
+    divl y
+label:
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item eax=0x2, edx=0x5
+    \item eax=0x5, edx=0x2
+    \item eax=0x3, edx=0x2aaaaaad
+    \item eax=0x2aaaaaad, edx=0x3
+\end{itemize*}
+
+% --- Întrebarea 8 (din 3.2) ---
+\subsection*{Întrebarea 8}
+Se stochează în EAX valoarea \texttt{0x80000000}, în EBX \texttt{0x8}, în ECX \texttt{0x1} și în EDX \texttt{0x4}. Ce valori vor avea registrii EAX, respectiv EDX după executarea instrucțiunii \texttt{mul \%ebx}?
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item eax=32, edx=0
+    \item eax=32, edx=4
+    \item eax=4, edx=0
+    \item eax=0, edx=4
+\end{itemize*}
+
+% --- Întrebarea 9 (din 3.2) ---
+\subsection*{Întrebarea 9}
+Se stochează în \%edx valoarea 0, în eax 37 și în ebx 15. Ce valori vor avea registrii eax si edx dupa executarea instructiunii \texttt{div \%ebx}?
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item eax=7, edx=2
+    \item eax=7, edx=0
+    \item eax=2, edx=0
+    \item eax=2, edx=7
+\end{itemize*}
+
+% --- Întrebarea 10 (din 3.2) ---
+\subsection*{Întrebarea 10}
+Fie codul de mai jos. Care este valoarea depozitată în z când ajungem la eticheta \texttt{final}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 3.2)}]
+.data
+    x: .long 17
+    y: .long 6
+    x1: .long 5
+    y1: .long 9
+    z: .space 4
+.text
+.global main
+main:
+    mov x, %eax
+    mov y, %ebx
+    cmp %eax, %ebx
+    jge et1
+    mov x1, %eax
+    cmp %eax, %ebx
+    jle et
+    mov x, %ebx
+et:
+    mov x1, %eax
+    mov y1, %ebx
+    cmp %eax, %ebx
+    jge et2
+    add %eax, %ebx
+    jmp final
+et1:
+    add %eax, %ebx
+    jmp final
+et2:
+    sub %eax, %ebx
+final:
+    mov %ebx, z
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 1
+    \item 12
+    \item 23
+    \item 4 
+\end{itemize*}
+
+% --- Întrebarea 11 (din 3.2) ---
+\subsection*{Întrebarea 11}
+Care este ordinea de trecere prin etichete?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 3.2)}]
+.data
+.text
+.global main
+main:
+    jmp etb
+eto:
+    jmp etd
+eth:
+    jmp eto
+etb:
+    jmp eth
+etd:
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item eth, etb, etd, eto
+    \item eto, eth, etb,etd
+    \item etb, eto, eth, etd
+    \item etb, eth, eto, etd 
+\end{itemize*}
+
+% --- Întrebarea 12 (din 3.2) ---
+\subsection*{Întrebarea 12}
+De câte ori se va executa instrucțiunea \texttt{loop}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 3.2)}]
+.data
+    x: .long 5
+    y: .long 5
+    s: .long 0
+.text
+.global main
+main:
+    mov x, %ecx
+    sub y, %ecx
+et:
+    add %ecx, s
+    loop et
+exit:
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 0x1
+    \item 0x5
+    \item 0xffffffff
+    \item este un ciclu infinit
+    \item 0x0 
+\end{itemize*}
+
+% --- Întrebarea 13 (din 3.2) ---
+\subsection*{Întrebarea 13}
+Fie următorul program. Ce valoare vom obține dacă vom rula cu debuggerul \texttt{b et\_exit}, \texttt{run}, \texttt{ir edx}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 3.2)}]
+.data
+.text
+.global main
+main:
+    mov $2, %eax
+    mov $3, %ebx
+    add %eax, %ebx
+    mul %ebx
+    mov $0, %edx
+    divl $3
+    add %eax, %edx
+et_exit:
+    mov $1, %eax
+    mov $0, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 0x1
+    \item 0x0
+    \item 0x3
+    \item 0x4 
+\end{itemize*}
+
+\newpage
+\section{Test Laborator 4.1 / 4.2 / 4.3}
+
+% --- Întrebarea 1 (din 4.1 / 4.2 / 4.3) ---
+\subsection*{Întrebarea 1}
+Ce valori vor fi depozitate în v când execuția va ajunge în dreptul etichetei \texttt{et\_exit}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.1/4.2/4.3)}]
+.data
+    v: .space 20  # (sau .space 24)
+    n: .long 5
+.text
+.global main
+main:
+    lea v, %edi  # (sau movl $v, %edi)
+    mov $11, %edx
+    mov $0, %ecx
+et_loop:
+    cmp n, %ecx
+    jg et_exit
+    mov %edx, # (%edi, %ecx, 4)
+    inc %ecx
+    inc %edx
+    jmp et_loop
+et_exit:
+    mov $1, %eax
+    xor %ebx, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 11, 12, 13, 14, 15
+    \item 11, 12, ..., 27
+    \item 0, 1, 2, 3, 4, 5
+    \item Execuția nu ajunge la et\_exit
+    \item 11, 12, 13, 14, 15, 16 
+\end{itemize*}
+
+% --- Întrebarea 2 (din 4.1) ---
+\subsection*{Întrebarea 2}
+Ce se va afișa pe ecran? (Notă: codul a fost reasamblat din fragmente)
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.1)}]
+.data
+    x: .long 1, 3, 6, 7, 9
+    n1: .long 5
+    n2: .long 10
+    c: .long 0x64636261
+    s: .space 11
+.text
+.global main
+main:
+    mov $s, %edi
+    mov $x, %esi
+    movb c, %al
+    mov $0, %ecx
+et_loop1:
+    cmp n2, %ecx
+    je et_exit_loop1
+    mov %al, (%edi, %ecx, 1)
+    inc %ecx
+    jmp et_loop1
+et_exit_loop1:
+    mov $c, %eax
+    movb 1(%eax), %al
+    mov $0, %ecx
+et_loop2:
+    cmp n1, %ecx
+    je et_exit
+    mov (%esi, %ecx, 4), %ebx
+    mov %al, (%edi, %ebx, 1)
+    inc %ecx
+    jmp et_loop2
+et_exit:
+    mov $10, %ecx
+    movb $0, (%edi, %ecx, 1)
+    mov $4, %eax
+    mov $1, %ebx
+    mov $s, %ecx
+    mov $11, %edx
+    int $0x80
+    mov $1, %eax
+    xor %ebx, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 61, 61, 61, 61, 61, 61, 61, 61, 61, 61
+    \item aaaaaaaaaa
+    \item bbbbbaaaaa
+    \item ababaabbab 
+\end{itemize*}
+
+% --- Întrebarea 3 (din 4.1) ---
+\subsection*{Întrebarea 3}
+Ce se va afișa pe ecran?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.1)}]
+.data
+    n: .long 3
+    s: .asciz "abc"
+.text
+.global main
+main:
+    mov $s, %edi
+    mov $0, %ecx
+et_loop:
+    cmp n, %ecx
+    je et_exit
+    mov (%edi, %ecx, 1), %al
+    sub $'a', %al
+    add $'A', %al
+    mov %al, (%edi, %ecx, 1)
+    inc %ecx
+    jmp et_loop
+et_exit:
+    mov $4, %eax
+    mov $1, %ebx
+    mov $s, %ecx
+    mov $4, %edx
+    int $0x80
+    mov $1, %eax
+    xor %ebx, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item abc
+    \item Abc
+    \item Abc + o valoarea reziduala
+    \item ABC 
+\end{itemize*}
+
+% --- Întrebarea 4 (din 4.1) ---
+\subsection*{Întrebarea 4}
+Ce se va afișa pe ecran?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.1)}]
+.data
+    n: .long 3
+    s: .byte 'a', 'b', 'c'
+    t: .byte 'd', 'e', 'f'
+    u: .space 4
+.text
+.global main
+main:
+    mov $0, %ecx
+et_loop:
+    cmp n, %ecx
+    je et_exit
+    mov $0, %edx
+    sub %ecx, %edx
+    mov t(, %edx, 1), %al
+    mov %al, u(, %ecx, 1)
+    inc %ecx
+    jmp et_loop
+et_exit:
+    movb $0, u(, %ecx, 1)
+    mov $4, %eax
+    mov $1, %ebx
+    mov $u, %ecx
+    mov $4, %edx
+    int $0x80
+    mov $1, %eax
+    xor %ebx, %ebx
+    int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item def
+    \item abc
+    \item cba
+    \item dcb 
+\end{itemize*}
+
+% --- Întrebarea 5 (din 4.1) ---
+\subsection*{Întrebarea 5}
+Fie următorul program. Ce valoare vom obține dacă vom rula \texttt{b et\_exit}, \texttt{run}, \texttt{ir eax}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.1)}]
+.data
+n: .long 4
+v: .long 0x01020304, 0x05060708, 0x090a0b0c, 0x0d0e0f10
+.text
+.global main
+main:
+mov $v, %esi
+mov $1, %ecx
+mov (%esi, %ecx, 4), %eax
+add $4, %esi
+movb (%esi, %ecx, 4), %al
+et_exit:
+mov $1, %eax
+xor %ebx, %ebx
+int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 0x090a0b0c
+    \item 0x05060704
+    \item 0x090a0b08
+    \item 0x0506070c 
+\end{itemize*}
+
+% --- Întrebarea 6 (din 4.1 / 4.3) ---
+\subsection*{Întrebarea 6}
+Fie următorul program. Ce valoare vom obține dacă vom rula \texttt{b et\_exit}, \texttt{run}, \texttt{ir eax}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.1/4.3)}]
+.data
+n: .long 4
+v: .long 0x01020304, 0x05060708, 0x090a0b0c, 0x0d0e0f10
+.text
+.global main
+main:
+mov $v, %esi
+mov $2, %ecx
+mov -8(%esi, %ecx, 4), %eax
+et_exit:
+mov $1, %eax
+xor %ebx, %ebx
+int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 0x090a0b0c
+    \item 0x05060708
+    \item Execuție cu eroare
+    \item 0x01020304 
+\end{itemize*}
+
+% --- Întrebarea 7 (din 4.2) ---
+\subsection*{Întrebarea 7}
+Ce se va afișa pe ecran?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.2)}]
+.data
+n: .long 9
+s: .asciz "a1C95dBx3"
+t: .space 10
+.text
+.global main
+main:
+mov $s, %esi
+mov $t, %edi
+mov $0, %ecx
+mov $0, %edx
+et_loop:
+cmp n, %ecx
+je et_exit
+mov (%esi, %ecx, 1), %al
+cmp $'0', %al
+jl et2
+cmp $'9', %al
+jg et2
+mov %al, (%edi, %edx, 1)
+inc %edx
+et2:
+inc %ecx
+jmp et_loop
+et_exit:
+movb $0, (%edi, %edx, 1)
+inc %edx
+mov $4, %eax
+mov $1, %ebx
+mov $t, %ecx
+int $0x80
+mov $1, %eax
+xor %ebx, %ebx
+int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item aCdBx
+    \item a1C95dBx3
+    \item 1C95dB3
+    \item 1953 
+\end{itemize*}
+
+% --- Întrebarea 8 (din 4.2) ---
+\subsection*{Întrebarea 8}
+Ce valori vor fi stocate în x când execuția va ajunge la eticheta \texttt{et\_exit}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.2)}]
+.data
+x: .long 4, 2, 1, 5, 6
+n: .long 5
+.text
+.global main
+main:
+mov $x, %esi
+mov $0, %eax
+et_loop:
+cmp n, %eax
+je et_exit
+mov (%esi, %eax, 4), %ecx
+mov $1, %ebx
+sal %cl, %ebx
+mov %ebx, (%esi, %eax, 4)
+inc %eax
+jmp et_loop
+et_exit:
+mov $1, %eax
+xor %ebx, %ebx
+int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 0,0,0,0,0
+    \item 16, 4, 1, 25, 36
+    \item 1,2,3,4,5
+    \item 16, 4, 2, 32, 64 
+\end{itemize*}
+
+% --- Întrebarea 9 (din 4.2) ---
+\subsection*{Întrebarea 9}
+Fie următorul program. Ce valori se vor regăsi în registrul \%ebx la trecerea prin eticheta \texttt{et}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.2)}]
+.data
+v: .long 15, 21, 30, 16, 18
+n: .long 4
+.text
+.global main
+main:
+mov $n, %esi
+mov $0, %eax
+sub n, %eax
+mov $0, %ecx
+et_loop:
+cmp %eax, %ecx
+je et_exit
+mov (%esi, %ecx, 4), %ebx
+et:
+dec %ecx
+jmp et_loop
+et_exit:
+mov $1, %eax
+xor %ebx, %ebx
+int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 18, 16, 30, 21
+    \item 15, 21, 30, 16
+    \item 15, 21, 30, 16, 18
+    \item 4, 18, 16, 30 
+\end{itemize*}
+
+% --- Întrebarea 10 (din 4.2) ---
+\subsection*{Întrebarea 10}
+Fie următorul program. Ce valoare va avea elementul din mijloc din vector dacă vom rula \texttt{b et\_exit}, \texttt{run}, \texttt{x/3xw 8v}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.2)}]
+.data
+v: .long 0x01020304, 0x05060708, 0x090a0b0c
+.text
+.global main
+main:
+mov $v, %esi
+mov $2, %ecx
+mov (%esi, %ecx, 1), %eax
+mov %eax, 4(%esi, %ecx, 1)
+et_exit:
+mov $1, %eax
+xor %ebx, %ebx
+int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 0x05060708
+    \item 0x090a0b0c
+    \item 0x0506070c
+    \item 0x01020708 
+\end{itemize*}
+
+% --- Întrebarea 11 (din 4.2 / 4.3) ---
+\subsection*{Întrebarea 11}
+Ce valoare va fi stocată în s când execuția va ajunge la eticheta \texttt{et\_exit}?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.2/4.3)}]
+.data
+v: .long 15, 21, 30, 16, 18, 12
+n: .long 6
+s: .long 0
+.text
+.global main
+main:
+mov $v, %esi
+mov n, %eax
+shr $1, %eax
+mov $0, %ecx
+et_loop:
+cmp %eax, %ecx
+jge et_exit
+mov 0(%esi), %ebx  (sau movl (%esi), %ebx)
+add %ebx, s        (sau addl %ebx, s)
+add $8, %esi       (sau addl $8, %esi)
+inc %ecx
+jmp et_loop
+et_exit:
+mov $1, %eax
+xor %ebx, %ebx
+int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 23
+    \item 129
+    \item 66
+    \item 63
+\end{itemize*}
+
+% --- Întrebarea 12 (din 4.3) ---
+\subsection*{Întrebarea 12}
+Fie următorul program. Este acesta scris corect? Daca da, de ce, daca nu, de ce?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.3)}]
+.data
+x1: .long 5
+x2: .long 12
+x3: .long 27
+n: .long 3
+s: .long 0
+formatPrintf: .asciz "%d\n"
+.text
+.global main
+main:
+movl $x1, %edi
+movl $0, %ecx
+et_loop:
+cmp n, %ecx
+je et_exit
+movl (%edi, %ecx, 4), %eax
+addl %eax, s
+incl %ecx
+jmp et_loop
+et_exit:
+push s
+push $formatPrintf
+call printf
+pop %ebx
+pop %ebx
+movl $1, %eax
+movl $0, %ebx
+int $0x80
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item nu este scris corect, deoarece foloseste x1 pe post de array...
+    \item nu este scris corect, deoarece n trebuia sa fie egal cu 1...
+    \item este scris corect, dar nu va functiona conform asteptarilor...
+    \item nu este scris corect, din cauza ca intram in zone de memorie...
+    \item este scris corect, deoarece x1 e doar o adresa, ca numele unui vector 
+\end{itemize*}
+
+% --- Întrebarea 13 (din 4.3) ---
+\subsection*{Întrebarea 13}
+Stiind ca y este un \texttt{.long 0} declarat in sectiunea \texttt{.data}, care dintre urmatoarele poate fi valoarea initiala din x, stiind ca in urma apelului printf se va afisa la STDOUT valoarea 1572?
+\begin{lstlisting}[language=x86asm, caption={Cod Sursa (Lab 4.3)}]
+main:
+movl $0, %ecx
+movl $10, %edi
+et_while:
+cmp x, %ecx
+je et_exit
+movl x, %eax
+movl $0, %edx
+div %edi
+movl %eax, x
+movl %edx, %esi
+movl y, %eax
+mul %edi
+add %esi, %eax
+movl %eax, y
+jmp et_while
+et_exit:
+push y
+push $formatStr
+call printf
+popl %ebx
+popl %ebx
+\end{lstlisting}
+
+\textbf{Opțiuni:}
+\begin{itemize*}
+    \item 1572
+    \item 15720
+    \item 1024
+    \item 83412
+    \item 27510 
+\end{itemize*}
+
+% \end{multicols}
+\end{document}

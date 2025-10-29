@@ -4,13 +4,13 @@
 \usepackage[compact]{titlesec}
 \usepackage{enumitem}
 \usepackage{amsmath}
-\usepackage{amssymb}       % Extra math symbols (provides \mathbb, etc.)
-\usepackage{array}         % Essential for custom table columns
-\usepackage{colortbl}      % Improves color handling in tables
-\usepackage[table]{xcolor} % For coloring table cells and rows
-\usepackage{graphicx}      % For including images
-\usepackage{listings}      % For formatting code snippets
-\usepackage[framemethod=default]{mdframed} % REPLACEMENT: A robust package for framed boxes
+\usepackage{amssymb}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage[framemethod=default]{mdframed}
 \usepackage{multirow}
 \usepackage{booktabs}
 \usepackage{hyperref}
@@ -332,33 +332,60 @@ Din această relație rezultă că:$\lfloor \log_2(x) \rfloor = i_{max}$.
     }
     \end{lstlisting}
 \end{multicols}
+\textbf{Explicație:} în esență, singura diferență este modalitatea de calcul a punctului de mijloc: în prima variantă, este calculată media diferenței dintre capete (start și end) și este însumată punctului de plecare (start), pe când în cea de a doua variantă este făcută cât se poate de direct media celor 2 capete.
+\\ \noindent \hl{Problema apare pentru cea de a DOUA variantă dacă ambele valori ale capetelor sunt mari, având posibilitatea de a face overflow; primul 'approach' atenuează această posibilitate complet.}
+
 \vspace{0.5cm}
 
 \section{Seminar 0x01}
-\textbf{1.} Avem un pachet de cărți de joc (52 de cărți). Luăm cărțile pentru prima dată afară din pachet. Câtă informație avem în acest moment despre cărți? Amestecăm cărțile aleator \textit{(apropo, cum facem asta, algoritmic, eficient?)}. Câtă informație avem acum în pachetul de cărți? \textit{(folosiți și aproximarea lui Stirling pentru calcularea rezultatului)}
-\vspace{0.35cm}
+\textbf{1.} Avem un pachet de cărți de joc (52 de cărți). Luăm cărțile pentru prima dată afară din pachet. Câtă informație avem în acest moment despre cărți? Amestecăm cărțile aleator \textit{(apropo, cum facem asta, algoritmic, eficient?)}. Câtă informație avem acum în pachetul de cărți? \textit{(folosiți și aproximarea lui Stirling pentru calcularea rezultatului)} \\
 \noindent \hl{\textbf{R:} Informația inițială este de $log_2(52!) \approx 225.58$ biți, iar după amestecare rămâne aceeași, deoarece amestecarea nu schimbă entropia sistemului. Amestecarea se poate face folosind \href{https://en.wikipedia.org/wiki/Fisher\%E2\%80\%93Yates_shuffle}{algoritmul Fisher-Yates}, care are complexitate O(n).}
 \href{https://en.wikipedia.org/wiki/Stirling\%27s_approximation}{Aproximarea lui Stirling}
 
 \textbf{2.} Se dă o urnă în care avem 5 bile roșii și 3 bile albastre. Ni se spune că cineva extrage o bilă din urnă și aceasta este albastră. Se cere:
 \begin{enumerate}[label=(\alph*)]
-    \item câtă informație primim în urma acestei observații?
-    \item care a fost entropia urnei înainte de extragere și care este entropia urnei după extragere?
-    \item continuați să calculați entropia presupunân că extragem pas cu pas toate bilele albastre;
+    \item câtă informație primim în urma acestei observații? \\
+    \item care a fost entropia urnei înainte de extragere și care este entropia urnei după extragere? \\
+    \item continuați să calculați entropia presupunân că extragem pas cu pas toate bilele albastre; \\
     \item similar cu cerința anterioară pentru bilele roșii (începând cu urna inițială presupunem că extrageți rând pe rând fiecare bilă roșie și calculați entropia la fiecare pas).
 \end{enumerate}
 
 
-\textbf{3.} Se dau 12 bile. 11 dintre ele au aceeași greutate, iar una este mai ușoară. Folosind o balanță, care este numărul minim de cântăriri necesare pentru a identifica bila mai ușoară?
-
+\textbf{3.} Se dau 12 bile. 11 dintre ele au aceeași greutate, iar una este mai ușoară. Folosind o balanță, care este numărul minim de cântăriri necesare pentru a identifica bila mai ușoară? \\
+\noindent Intuitiv, vom împărți bilele în grupuri mai mici egale, comparându-le pe acestea recursiv până când se ajunge la cazul trivial (grupa este formată dintr-o singură bilă). \hl{Rezolvarea optimă (cu numărul minim de pași necesari):}
+începe cu împărțirea celor 12 bile în grupe de câte 4 - le vom nota A, B și C.
+comparăm greutățile A și B:
+    dacă A = B,
+        atunci bila este în c
+    altfel,
+        este în grupa cu greutatea mai mică;
 
 \textbf{4.}
 
 
-\textbf{5.}
+\textbf{5.} Se dă un număr natural $x$ pe $N$ biți. Câtă informație am câștigat dacă:
+\begin{enumerate}[label=(\alph*)]
+    \item ni se spune despre $x$ că are exact două valori "1" în reprezentarea sa binară;
+    \item ni se spune despre $x$ că are exact $\frac{N}{2}$ valori "1" în reprezentarea sa binară;
+    \item ni se spune despre $x$ că are o secvență continuă de $\frac{N}{4}$ biți de "1" în reprezentarea sa binară (restul biților sunt "0");
+    \item ni se spune despre $x$ că are MSB setat la "1";
+    \item ni se spune despre $x$ că este impar;
+    \item ni se spune despre $x$ că este o putere a lui 2;
+    \item ni se spune despre $x$ că are primii $\frac{N}{2}$ biți din reprezentarea sa binară setați la "0";
+    \item ni se spune despre $x$ că este un număr prim (aici doar o estimare aproximativă este posibilă);
+    \item ni se spune despre $x$ că are în reprezentarea sa binară un număr par de biți setați la "1";
+    \item ni se spune că $x = 42$.
+\end{enumerate}
 
 
-\textbf{6.}
+\textbf{6.} Se dă o variabilă aleatoare $X$ care este distribuită conform următorului tabel:
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{Evenimentul/simbolul $\mathbf{x}$} & $\mathbf{A}$ & $\mathbf{B}$ & $\mathbf{C}$ & $\mathbf{D}$ & $\mathbf{E}$ \\
+\hline
+\textbf{Probabilitatea $P(X = x)$} & $\frac{1}{3}$ & $\frac{1}{4}$ & $\frac{1}{6}$ & $\frac{1}{6}$ & $\frac{1}{12}$ \\
+\hline
+\end{tabular}
 
 
 \textbf{7.} Considerăm următorul mesaj bloc:
@@ -375,22 +402,452 @@ $P_{c1}$ & $P_{c2}$ & $P_{c3}$ & $P_{cl}$ \\
 \hline
 \end{tabular}
 \]
-Elementele $D_{ij}$ sunt date (deci avem 9 biți) iar elementele $P_{ij}$
-\textbf{8.}
+Elementele $D_{ij}$ sunt date (deci avem 9 biți) iar elementele $P_{ij}$ sunt biți de paritate (deci avem 7 biți redundanți): pe fiecare linie, pe fiecare coloană și pe mesajul total. Biții de paritate sunt "1" dacă avem un număr par de "1" în linie/coloană/mesaj. Cerințe:
+\begin{enumerate}[label=(\alph*)]
+    \item 
+\end{enumerate}
+
+\vspace{0.35cm}
+
+\textbf{8.} Sistemul de codare \textit{ISBN-10} pentru cărți folosește 9 cifre plus o cifră de verificare pentru a identifica unic fiecare carte. Rolul cifrei de verificare este dublu: 1) detectează dacă o cifră din cele 10 este scrisă greșit și 2) detectează dacă două cifre consecutive au fost interschimbate. Aceste două erori sunt cele mai comune când codăm astfel de informații pentru cărți. Codarea este următoarea: \[ x_{1}, x_{2}, x_{3}, x_{4}, x_{5}, x_{6}, x_{7}, x_{8}, x_{9}, p,\] unde $x_{1},\dots,x_{9} \in \{0,\dots,9\}$ sunt dați iar $p$ (acesta ar fi $x_{10}$) este calculat astfel încât: \[ \sum_{i=1}^{9}(11 - i)x_{i} + p = 0 mod 11.\]
+Cerințe:
+\begin{enumerate}[label=(\alph*)]
+    \item calculați cifra de verificare $p$ pentru codul ISBN-10: $0-306-40615p$;
+    \item arătați că orice cod ISBN poate detecta orice eroare de o cifră;
+    \item arătați că orice cod ISBN poate detecta orice interschimbare a două cifre consecutive din cod;
+    \item care este distanța minimă pentru acest cod?
+    \item ce se întâmplă dacă schimbăm regula pentru cifra de verificare astfel încât $\sum_{i=1}^{9}x_{i}+p = 0 mod 11$? Putem detecta/corecta erori la fel de bine?
+\end{enumerate}
 
 
 \textbf{9.}
 
 
-\textbf{10.}
+\textbf{10.} Avem un alfabet cu două simboluri:
 % \begin{definition}{}
 %
 % \end{definition}
 
+
 \section{Seminar 0x02}
+\textbf{1.} Calculați tabelele de adevăr pentru următoarele expresii logice:
+\begin{multicols}{3}
+
+\renewcommand{\arraystretch}{0.9}
+\setlength{\tabcolsep}{6pt}
+\centering
+
+\begin{tabular}{|c|c|c||c|}
+\multicolumn{4}{|c|}{(a) $X = A + BC$} \\ \hline
+A & B & C & X \\ \hline
+0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 1 & 0 \\ \hline
+0 & 1 & 0 & 0 \\ \hline
+0 & 1 & 1 & 1 \\ \hline
+1 & 0 & 0 & 1 \\ \hline
+1 & 0 & 1 & 1 \\ \hline
+1 & 1 & 0 & 1 \\ \hline
+1 & 1 & 1 & 1 \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c||c|}
+\multicolumn{4}{|c|}{(b) $X = A(B + D)$} \\ \hline
+A & B & D & X \\ \hline
+0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 1 & 0 \\ \hline
+0 & 1 & 0 & 0 \\ \hline
+0 & 1 & 1 & 0 \\ \hline
+1 & 0 & 0 & 0 \\ \hline
+1 & 0 & 1 & 1 \\ \hline
+1 & 1 & 0 & 1 \\ \hline
+1 & 1 & 1 & 1 \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c||c|}
+\multicolumn{4}{|c|}{(c) $X = (A + B)(A + C)$} \\ \hline
+A & B & C & X \\ \hline
+0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 1 & 0 \\ \hline
+0 & 1 & 0 & 0 \\ \hline
+0 & 1 & 1 & 1 \\ \hline
+1 & 0 & 0 & 1 \\ \hline
+1 & 0 & 1 & 1 \\ \hline
+1 & 1 & 0 & 1 \\ \hline
+1 & 1 & 1 & 1 \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c||c|}
+\multicolumn{5}{|c|}{(d) $X = \overline{A}(B + C)D$} \\ \hline
+A & B & C & D & X \\ \hline
+0 & 0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 0 & 1 & 0 \\ \hline
+0 & 0 & 1 & 0 & 0 \\ \hline
+0 & 0 & 1 & 1 & 1 \\ \hline
+0 & 1 & 0 & 0 & 0 \\ \hline
+0 & 1 & 0 & 1 & 1 \\ \hline
+0 & 1 & 1 & 0 & 0 \\ \hline
+0 & 1 & 1 & 1 & 1 \\ \hline
+1 & 0 & 0 & 0 & 0 \\ \hline
+1 & 0 & 0 & 1 & 0 \\ \hline
+1 & 0 & 1 & 0 & 0 \\ \hline
+1 & 0 & 1 & 1 & 0 \\ \hline
+1 & 1 & 0 & 0 & 0 \\ \hline
+1 & 1 & 0 & 1 & 0 \\ \hline
+1 & 1 & 1 & 0 & 0 \\ \hline
+1 & 1 & 1 & 1 & 0 \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c||c|}
+\multicolumn{5}{|c|}{(e) $X = A\overline{B}(C + D)$} \\ \hline
+A & B & C & D & X \\ \hline
+0 & 0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 0 & 1 & 0 \\ \hline
+0 & 0 & 1 & 0 & 0 \\ \hline
+0 & 0 & 1 & 1 & 0 \\ \hline
+0 & 1 & 0 & 0 & 0 \\ \hline
+0 & 1 & 0 & 1 & 0 \\ \hline
+0 & 1 & 1 & 0 & 0 \\ \hline
+0 & 1 & 1 & 1 & 0 \\ \hline
+1 & 0 & 0 & 0 & 0 \\ \hline
+1 & 0 & 0 & 1 & 1 \\ \hline
+1 & 0 & 1 & 0 & 1 \\ \hline
+1 & 0 & 1 & 1 & 1 \\ \hline
+1 & 1 & 0 & 0 & 0 \\ \hline
+1 & 1 & 0 & 1 & 0 \\ \hline
+1 & 1 & 1 & 0 & 0 \\ \hline
+1 & 1 & 1 & 1 & 0 \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c||c|}
+\multicolumn{5}{|c|}{(f) $X = AB(C \oplus D)$} \\ \hline
+A & B & C & D & X \\ \hline
+0 & 0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 0 & 1 & 0 \\ \hline
+0 & 0 & 1 & 0 & 0 \\ \hline
+0 & 0 & 1 & 1 & 0 \\ \hline
+0 & 1 & 0 & 0 & 0 \\ \hline
+0 & 1 & 0 & 1 & 0 \\ \hline
+0 & 1 & 1 & 0 & 0 \\ \hline
+0 & 1 & 1 & 1 & 0 \\ \hline
+1 & 0 & 0 & 0 & 0 \\ \hline
+1 & 0 & 0 & 1 & 0 \\ \hline
+1 & 0 & 1 & 0 & 0 \\ \hline
+1 & 0 & 1 & 1 & 0 \\ \hline
+1 & 1 & 0 & 0 & 0 \\ \hline
+1 & 1 & 0 & 1 & 1 \\ \hline
+1 & 1 & 1 & 0 & 1 \\ \hline
+1 & 1 & 1 & 1 & 0 \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c||c|}
+\multicolumn{5}{|c|}{(g) $X = A\overline{B}C\overline{D}$} \\ \hline
+A & B & C & D & X \\ \hline
+0 & 0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 0 & 1 & 0 \\ \hline
+0 & 0 & 1 & 0 & 0 \\ \hline
+0 & 0 & 1 & 1 & 0 \\ \hline
+0 & 1 & 0 & 0 & 0 \\ \hline
+0 & 1 & 0 & 1 & 0 \\ \hline
+0 & 1 & 1 & 0 & 0 \\ \hline
+0 & 1 & 1 & 1 & 0 \\ \hline
+1 & 0 & 0 & 0 & 0 \\ \hline
+1 & 0 & 0 & 1 & 0 \\ \hline
+1 & 0 & 1 & 0 & 1 \\ \hline
+1 & 0 & 1 & 1 & 0 \\ \hline
+1 & 1 & 0 & 0 & 0 \\ \hline
+1 & 1 & 0 & 1 & 0 \\ \hline
+1 & 1 & 1 & 0 & 0 \\ \hline
+1 & 1 & 1 & 1 & 0 \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c||c|}
+\multicolumn{5}{|c|}{(h) $X = (A\overline{B} + \overline{A}B) + (C\overline{D} + \overline{C}D)$} \\ \hline
+A & B & C & D & X \\ \hline
+0 & 0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 0 & 1 & 1 \\ \hline
+0 & 0 & 1 & 0 & 1 \\ \hline
+0 & 0 & 1 & 1 & 0 \\ \hline
+0 & 1 & 0 & 0 & 1 \\ \hline
+0 & 1 & 0 & 1 & 1 \\ \hline
+0 & 1 & 1 & 0 & 1 \\ \hline
+0 & 1 & 1 & 1 & 1 \\ \hline
+1 & 0 & 0 & 0 & 1 \\ \hline
+1 & 0 & 0 & 1 & 1 \\ \hline
+1 & 0 & 1 & 0 & 1 \\ \hline
+1 & 0 & 1 & 1 & 1 \\ \hline
+1 & 1 & 0 & 0 & 0 \\ \hline
+1 & 1 & 0 & 1 & 1 \\ \hline
+1 & 1 & 1 & 0 & 1 \\ \hline
+1 & 1 & 1 & 1 & 0 \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c||c|}
+\multicolumn{5}{|c|}{(i) $X = (\overline{A}\hspace{0.1cm}\overline{B} + AB)(\overline{C}\hspace{0.1cm}\overline{D} + CD)$} \\ \hline
+A & B & C & D & X \\ \hline
+0 & 0 & 0 & 0 & 1 \\ \hline
+0 & 0 & 0 & 1 & 0 \\ \hline
+0 & 0 & 1 & 0 & 0 \\ \hline
+0 & 0 & 1 & 1 & 1 \\ \hline
+0 & 1 & 0 & 0 & 0 \\ \hline
+0 & 1 & 0 & 1 & 0 \\ \hline
+0 & 1 & 1 & 0 & 0 \\ \hline
+0 & 1 & 1 & 1 & 0 \\ \hline
+1 & 0 & 0 & 0 & 0 \\ \hline
+1 & 0 & 0 & 1 & 0 \\ \hline
+1 & 0 & 1 & 0 & 0 \\ \hline
+1 & 0 & 1 & 1 & 0 \\ \hline
+1 & 1 & 0 & 0 & 1 \\ \hline
+1 & 1 & 0 & 1 & 0 \\ \hline
+1 & 1 & 1 & 0 & 0 \\ \hline
+1 & 1 & 1 & 1 & 1 \\ \hline
+\end{tabular}
+
+\begin{tabular}{|c|c|c|c||c|}
+\multicolumn{5}{|c|}{(j) $X = A(A \oplus B)(B \oplus C)D$} \\ \hline
+A & B & C & D & X \\ \hline
+0 & 0 & 0 & 0 & 0 \\ \hline
+0 & 0 & 0 & 1 & 0 \\ \hline
+0 & 0 & 1 & 0 & 0 \\ \hline
+0 & 0 & 1 & 1 & 0 \\ \hline
+0 & 1 & 0 & 0 & 0 \\ \hline
+0 & 1 & 0 & 1 & 0 \\ \hline
+0 & 1 & 1 & 0 & 0 \\ \hline
+0 & 1 & 1 & 1 & 0 \\ \hline
+1 & 0 & 0 & 0 & 0 \\ \hline
+1 & 0 & 0 & 1 & 0 \\ \hline
+1 & 0 & 1 & 0 & 0 \\ \hline
+1 & 0 & 1 & 1 & 1 \\ \hline
+1 & 1 & 0 & 0 & 0 \\ \hline
+1 & 1 & 0 & 1 & 0 \\ \hline
+1 & 1 & 1 & 0 & 0 \\ \hline
+1 & 1 & 1 & 1 & 0 \\ \hline
+\end{tabular}
+\end{multicols}
+
+\textbf{2.} Desenați circuitele digitale pentru următoarele expresii logice:
+\begin{multicols}{2}
+\begin{enumerate}[label=(\alph*)]
+    \item $X = (A + B)C$
+    \item $X = A + BC + \overline{D}$
+    \item $X = AB + \overline{A}\hspace{0.12cm}\overline{C}$
+    \item $X = !(A + B)(C + D)\overline{D}$
+    \item $X = A \oplus B \oplus CD$
+    \item $X = A\overline{B}\oplus CB$
+\end{enumerate}
+\end{multicols}
+
+
+\textbf{3.}
+Legile de Morgan sunt: $\overline{A+B}=\overline{A}\hspace{0.1cm}\overline{B}$ și $\overline{AB}=\overline{A}+\overline{B}$. Cerințe:
+\begin{enumerate}[label=(\alph*)]
+    \item verificațicele două legi;
+    \item desenați circuitele pentru: $\overline{A+B}$, $\overline{A}\hspace{0.1cm}\overline{B}$, $\overline{AB}$ și $\overline{A}+\overline{B}$;
+    \item folosind și cele două legi, calculați/simplificați expresiile:
+    \begin{enumerate}[label=i.*]
+        \item $\neg(\overline{A}+\overline{B}) = AB$
+        \item $\neg(\overline{A}\hspace{0.1cm}\overline{B}) = A + B$
+        \item $\overline{A+B+C}$, generalizați la $N$ variabile digitale A
+        \item $\overline{ABC}$, generalizați la $N$ variabile digitale A
+        \item $\neg(A + B) \cdot \overline{A} \cdot \overline{B}$
+        \item $\overline{AB}(\overline{A} + \overline{B})$
+        \item ${\overline(A + B)}(\overline{A}+\overline{B})$
+        \item $\overline{A} \cdot \overline{B} \cdot \overline{(AB)}$
+        \item $C + \overline{CB}$
+        \item $\overline{AB}(\overline{A} + B)(\overline{B} + \overline{B})$
+        \item $\overline{\overline{(A\overline{B})}\overline{(\overline{B} + C)}}$
+        \item 
+    \end{enumerate}
+\end{enumerate}
+
+
+\textbf{4.} Simplificați următoarele expresii logice:
+\begin{enumerate}[label=(\alph*)]
+    \item $A + 0$
+    \item $\overline{A}\cdot 0$
+    \item $A + \overline{A}$
+    \item $A + A$
+    \item $A + AB$
+    \item $A + \overline{A}\cdot B$
+    \item $A(\overline{A} + B)$
+    \item $AB + \overline{A}B$
+    \item $(\overline{A} + \overline{B})(\overline{A} + B)$
+    \item $A(A + B + C + ...)$
+    \item fie
+        \begin{itemize}
+            \item 
+        \end{itemize}
+    \item $A + A\overline{A}$
+    \item $AB + A\overline{B}$
+\end{enumerate}
+
+
+\textbf{5.}
+
+
+\textbf{6.}
+
+
+
+\textbf{7.}
+
+
+
+\textbf{8.}
+
+
+
+\textbf{9.}
+
+
+
+\textbf{10.}
+
+
+
+\textbf{11.}
+
+
+
+
+\textbf{12.}
+
+
+
+\textbf{13.}
+
+
+
+\textbf{14.}
+
+
+
+
+\textbf{15.}
+
+
+
+\textbf{16.}
+
+
+
+\textbf{17.}
+
+
+
 \section{Seminar 0x03}
+\textbf{1.}
+
+
+
+\textbf{2.}
+
+
+
+\textbf{3.}
+
+
+
+\textbf{4.}
+
+
+\textbf{5.}
+
+
+\textbf{6.}
+
+
+
+\textbf{7.}
+
+
+
+\textbf{8.}
+
+
+
+\textbf{9.}
+
+
+
+\textbf{10.}
+
+
+
 \section{Seminar 0x04}
+\textbf{1.}
+
+
+
+\textbf{2.}
+
+
+
+\textbf{3.}
+
+
+
+\textbf{4.}
+
+
+\textbf{5.}
+
+
+\textbf{6.}
+
+
+
+\textbf{7.}
+
+
+
+\textbf{8.}
+
+
+
+\textbf{9.}
+
+
+
+\textbf{10.}
+
+
+
 \section{Seminar 0x05}
+\textbf{1.}
+
+
+
+\textbf{2.}
+
+
+
+\textbf{3.}
+
+
+
+\textbf{4.}
+
+
+\textbf{5.}
+
+
+\textbf{6.}
+
+
+
+\textbf{7.}
+
+
+
+\textbf{8.}
+
+
+
+\textbf{9.}
+
+
+
+\textbf{10.}
 
 
 % \begin{multicols}{2}
