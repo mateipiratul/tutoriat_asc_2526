@@ -1,0 +1,415 @@
+\documentclass[12pt]{article}
+
+% --- PREAMBUL ---
+
+% Setări pentru limba română și fonturi
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[romanian]{babel}
+
+% Setări pentru geometrie pagină
+\usepackage[a4paper, margin=2.5cm]{geometry}
+
+% Pachete pentru tabele frumoase
+\usepackage{booktabs}
+
+% Pachete pentru link-uri (dacă adăugăm)
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+% Pachetul esențial pentru listarea codului
+\usepackage{listings}
+\usepackage{xcolor} % Necesar pentru culori în listings
+
+% Definirea culorilor pentru cod
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.98,0.98,0.98}
+
+% Definirea stilului pentru cod
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{blue},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+% Definirea limbajului x86asm pentru syntax highlighting
+\lstdefinelanguage{x86asm}{
+  keywords={mov, movl, add, addl, sub, subl, imul, mul, div, idiv, idivl, cdq, int, jmp, je, jne, jg, jl, jge, jle, ja, jb, jae, jbe, cmp, cmpl, lea, leal, loop, pushl, popl, call, ret, .global, .text, .data, .asciz, .ascii, .long, .word, .byte, .space},
+  morecomment=[l]{\#}, % Comentarii care încep cu #
+  sensitive=false % Nu e case-sensitive
+}
+
+
+% --- INFORMAȚII DOCUMENT ---
+\title{Rezumat Limbajul Assembly x86 (Sintaxa AT\&T)}
+\author{Partener de programare (via Gemini)}
+\date{\today}
+
+
+% --- ÎNCEPUT DOCUMENT ---
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Concepte de Bază ale Assembly x86}
+
+Limbajul Assembly x86 este un limbaj de programare de nivel scăzut care permite controlul direct asupra procesorului (CPU). În acest laborator, folosim \textbf{sintaxa AT\&T}, care este predominantă pe sistemele Unix.
+
+Componentele principale ale limbajului sunt:
+\begin{itemize}
+    \item \textbf{Registrii}: Mici locații de stocare rapide, direct în procesor (ex: \texttt{\%eax}, \texttt{\%ebx}).
+    \item \textbf{Instrucțiuni}: Operații pe care procesorul le poate executa (ex: \texttt{mov}, \texttt{add}).
+    \item \textbf{Flaguri (Indicatori)}: Biți speciali care rețin starea ultimei operații (ex: dacă rezultatul a fost zero).
+    \item \textbf{Adresarea Memoriei}: Modul în care accesăm datele stocate în RAM.
+    \item \textbf{Stiva (Stack)}: O zonă specială de memorie, folosită intens pentru apelul funcțiilor.
+    \item \textbf{Întreruperi}: Modul în care cerem sistemului de operare să execute operații pentru noi (ex: afișarea pe ecran).
+\end{itemize}
+
+\section{Registrii, Notația și Adresarea}
+
+\subsection{Registrii de uz general}
+Pe o arhitectură de 32 de biți, registrii principali de uz general au prefixul "E" (Extended). De exemplu, registrul \texttt{\%eax} (32 biți) conține registrul \texttt{\%ax} (16 biți), care la rândul lui este împărțit în \texttt{\%ah} (High) și \texttt{\%al} (Low), fiecare pe 8 biți.
+
+Iată principalii registri și scopul lor convențional:
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{llll}
+\toprule
+\textbf{Registrul} & \textbf{Nume} & \textbf{Descriere} & \textbf{Restaurat după apel} \\
+\midrule
+\textbf{AX} & accumulator & este utilizat în operații aritmetice & nu \\
+\textbf{BX} & base & utilizat ca pointer la date & da \\
+\textbf{CX} & counter & este utilizat în instrucțiunile repetitive & nu \\
+\textbf{DX} & data & este utilizat în operații aritmetice și I/O & nu \\
+\textbf{SP} & stack pointer & pointer la vârful stivei & da \\
+\textbf{BP} & base pointer & pointer la baza stivei & da \\
+\textbf{SI} & source index & pointer la sursă în operații stream & da \\
+\textbf{DI} & destination index & pointer la destinație în operații stream & da \\
+\bottomrule
+\end{tabular}
+\caption{Registrii principali de uz general.}
+\label{tab:registri}
+\end{table}
+
+\subsection{Registrul EFLAGS (Indicatori)}
+Acest registru reține starea programului. Câteva flag-uri importante sunt:
+\begin{itemize}
+    \item \textbf{CF (Carry Flag)}: Setat dacă a avut loc transport (la adunare/scădere).
+    \item \textbf{ZF (Zero Flag)}: Setat dacă rezultatul ultimei operații a fost 0.
+    \item \textbf{SF (Sign Flag)}: Setat dacă rezultatul a fost negativ (bitul cel mai semnificativ e 1).
+    \item \textbf{OF (Overflow Flag)}: Setat dacă a avut loc o depășire \textit{cu semn} (overflow).
+\end{itemize}
+
+\subsection{Notație și Adresare}
+În sintaxa AT\&T, regulile de bază sunt:
+\begin{enumerate}
+    \item \textbf{Registrii} sunt prefixați de \texttt{\%} (ex: \texttt{\%eax}, \texttt{\%ebx}).
+    \item \textbf{Constantele} (valorile imediate) sunt prefixate de \texttt{\$} (ex: \texttt{\$5}, \texttt{\$0x80}).
+    \item \textbf{Adresarea Memoriei} folosește paranteze. Forma generală complexă este \texttt{offset(\%baza, \%index, multiplicator)}.
+    \begin{itemize}
+        \item Exemplu: \texttt{4(\%eax, \%edx, 4)} înseamnă adresa calculată ca \texttt{\%eax + (\%edx * 4) + 4}.
+    \end{itemize}
+\end{enumerate}
+
+\section{Structura Programului și Tipurile de Date}
+
+\subsection{Tipurile de Date}
+Când declarăm variabile în memorie, specificăm tipul lor:
+\begin{itemize}
+    \item \texttt{.byte}: 1 byte (8 biți)
+    \item \texttt{.word}: 2 bytes (16 biți)
+    \item \texttt{.long}: 4 bytes (32 biți)
+    \item \texttt{.quad}: 8 bytes (64 biți)
+    \item \texttt{.ascii}: Șir de caractere \textit{fără} terminator nul.
+    \item \texttt{.asciz}: Șir de caractere \textit{cu} terminator nul (\texttt{\textbackslash 0}).
+    \item \texttt{.space N}: Rezervă \texttt{N} bytes de spațiu neinițializat.
+\end{itemize}
+
+\subsection{Structura de Bază}
+Un program Assembly are, în general, două secțiuni principale:
+\begin{enumerate}
+    \item \textbf{\texttt{.data}}: Aici se declară variabilele inițializate.
+    \item \textbf{\texttt{.text}}: Aici se scrie codul (instrucțiunile).
+\end{enumerate}
+
+\begin{lstlisting}[language=x86asm, caption={Structura de bază a unui program}]
+.data
+    x: .long 15
+    str: .asciz "String"
+
+.text
+.global main
+main:
+    # Aici vin instrucțiunile
+    # ...
+\end{lstlisting}
+
+\section{Instrucțiuni Fundamentale și Apeluri de Sistem}
+
+\subsection{Instrucțiunea \texttt{mov}}
+Este instrucțiunea de bază pentru a muta date. Formatul AT\&T este:
+\texttt{mov Sursa, Destinatia}
+
+Exemplu: \texttt{movl \$16, \%eax} încarcă valoarea constantă \texttt{16} în registrul \texttt{\%eax}. (Sufixul \texttt{l} vine de la \texttt{.long}).
+
+\subsection{Apeluri de Sistem (System Calls)}
+Pentru a interacționa cu sistemul de operare, folosim întreruperea \texttt{int \$0x80}.
+\begin{itemize}
+    \item \textbf{\texttt{\%eax}}: Deține \textit{codul funcției} pe care vrem să o apelăm.
+    \item \textbf{\texttt{\%ebx, \%ecx, \%edx...}}: Dețin \textit{argumentele} funcției.
+\end{itemize}
+
+\subsubsection{Exemplu 1: Oprirea programului (SYSTEM\_EXIT)}
+\begin{itemize}
+    \item Cod funcție: \texttt{1} (pentru \texttt{exit})
+    \item Argument 1 (\texttt{\%ebx}): Codul de retur (de obicei \texttt{0})
+\end{itemize}
+\begin{lstlisting}[language=x86asm]
+movl $1, %eax   # Codul pentru sys_exit
+movl $0, %ebx   # Codul de retur 0
+int $0x80       # Apelez sistemul
+\end{lstlisting}
+
+\subsubsection{Exemplu 2: Afișare pe ecran (SYSTEM\_WRITE)}
+\begin{itemize}
+    \item Cod funcție: \texttt{4} (pentru \texttt{write})
+    \item Argument 1 (\texttt{\%ebx}): Unde scriem (\texttt{1} pentru \texttt{stdout} - consola)
+    \item Argument 2 (\texttt{\%ecx}): Adresa de memorie a mesajului
+    \item Argument 3 (\texttt{\%edx}): Lungimea mesajului
+\end{itemize}
+\begin{lstlisting}[language=x86asm]
+.data
+    helloWorld: .asciz "Hello, world!\n"
+    # "Hello, world!\n" are 15 caractere
+.text
+.global main
+main:
+    movl $4, %eax         # Codul pentru sys_write
+    movl $1, %ebx         # File descriptor 1 (stdout)
+    movl $helloWorld, %ecx # Adresa mesajului
+    movl $15, %edx        # Lungimea mesajului
+    int $0x80             # Apelez sistemul
+    
+    # ... codul pentru exit ...
+\end{lstlisting}
+
+\section{Operații Aritmetice și Logice}
+
+\subsection{Operații Aritmetice}
+\begin{table}[h!]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Instrucțiune} & \textbf{Efect} \\
+\midrule
+\texttt{add op1, op2} & \texttt{op2 = op2 + op1} \\
+\texttt{sub op1, op2} & \texttt{op2 = op2 - op1} \\
+\texttt{mul op} & \texttt{(EDX, EAX) = EAX * op} (fără semn) \\
+\texttt{imul op} & \texttt{(EDX, EAX) = EAX * op} (cu semn) \\
+\texttt{div op} & \texttt{(EDX, EAX) = (EDX, EAX) / op} (fără semn) \\
+\texttt{idiv op} & \texttt{(EDX, EAX) = (EDX, EAX) / op} (cu semn) \\
+\bottomrule
+\end{tabular}
+\caption{Instrucțiuni aritmetice de bază.}
+\end{table}
+
+\textbf{Important la \texttt{imul} și \texttt{idiv}}:
+\begin{itemize}
+    \item Presupun \textit{implicit} că operandul sursă este în \texttt{\%eax}.
+    \item \textbf{Înmulțirea}: Rezultatul pe 64 de biți este stocat în perechea \texttt{EDX:EAX}.
+    \item \textbf{Împărțirea}: Deîmpărțitul pe 64 de biți este citit din \texttt{EDX:EAX}. Câtul este stocat în \texttt{\%eax}, iar restul în \texttt{\%edx}.
+\end{itemize}
+
+\subsection{Operații Logice}
+\begin{table}[h!]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Instrucțiune} & \textbf{Efect} \\
+\midrule
+\texttt{not op} & \texttt{op = \textasciitilde op} (NOT pe biți) \\
+\texttt{and op1, op2} & \texttt{op2 = op2 \& op1} (ȘI pe biți) \\
+\texttt{or op1, op2} & \texttt{op2 = op2 | op1} (SAU pe biți) \\
+\texttt{xor op1, op2} & \texttt{op2 = op2 \textasciicircum op1} (SAU Exclusiv pe biți) \\
+\bottomrule
+\end{tabular}
+\caption{Instrucțiuni logice de bază.}
+\end{table}
+
+\subsection{Operații de Deplasare (Shift)}
+\begin{table}[h!]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Instrucțiune} & \textbf{Efect} \\
+\midrule
+\texttt{shl numar, op} & \texttt{op = op << numar} (shift logic stânga) \\
+\texttt{shr numar, op} & \texttt{op = op >> numar} (shift logic dreapta) \\
+\texttt{sal numar, op} & \texttt{op = op << numar} (shift aritmetic stânga) \\
+\texttt{sar numar, op} & \texttt{op = op >> numar} (shift aritmetic dreapta, \textit{păstrează bitul de semn}) \\
+\bottomrule
+\end{tabular}
+\caption{Instrucțiuni de deplasare (shift).}
+\end{table}
+
+\section{Exemple pentru Concepte "Dificile"}
+
+\subsection{Exemplu 1: Împărțirea cu \texttt{idiv} și \texttt{cdq}}
+Instrucțiunea \texttt{idiv} împarte numărul de 64 de biți din \texttt{EDX:EAX} la operand. Pentru a împărți un număr de 32 de biți din \texttt{\%eax}, trebuie să extindem bitul de semn al acestuia în \texttt{\%edx}. Instrucțiunea \texttt{cdq} (Convert Double to Quad) face exact acest lucru.
+
+\begin{lstlisting}[language=x86asm, caption={Exemplu de împărțire cu \texttt{idiv} și \texttt{cdq}}]
+.data
+    x: .long -45
+    y: .long 7
+.text
+.global main
+main:
+    movl x, %eax    # EAX = -45
+    movl y, %ebx    # EBX = 7
+    
+    # PREGĂTIREA PENTRU ÎMPĂRȚIRE
+    cdq             # Extinde EAX (-45) în EDX:EAX. 
+                    # EDX devine 0xFFFFFFFF (adică -1)
+    
+    idivl %ebx      # Împarte EDX:EAX la EBX (7)
+    
+    # Rezultat:
+    # EAX = -6 (câtul)
+    # EDX = -3 (restul)
+    
+    # ... exit ...
+\end{lstlisting}
+
+\subsection{Exemplu 2: \texttt{lea} vs. \texttt{mov}}
+Aceasta este o distincție crucială:
+\begin{itemize}
+    \item \texttt{movl v, \%eax}: Încarcă \textbf{valoarea} de la adresa \texttt{v} în \texttt{\%eax}.
+    \item \texttt{leal v, \%eax}: Încarcă \textbf{adresa} lui \texttt{v} în \texttt{\%eax}.
+\end{itemize}
+
+\begin{lstlisting}[language=x86asm, caption={Accesarea unui tablou folosind \texttt{lea}}]
+.data
+    v: .long 10, 20, 30, 40, 50
+.text
+.global main
+main:
+    # --- Varianta cu LEA (corectă și eficientă) ---
+    leal v, %edi            # %edi = adresa de început a lui v (baza)
+    movl $1, %ecx           # %ecx = indexul dorit (1)
+    
+    # Adresare: (%baza, %index, multiplicator)
+    # Adresa calculată = %edi + %ecx * 4
+    movl (%edi, %ecx, 4), %eax  # EAX = valoarea de la adresa (v + 1*4)
+                                # EAX va fi 20
+    
+    # --- Varianta cu MOV (incorectă pentru adresare) ---
+    # movl v, %edi          # INCORRECT: %edi ar fi 10 (valoarea primului element)
+    
+    # ... exit ...
+\end{lstlisting}
+
+\section{Salturi și Structuri de Control (Bucle)}
+
+\subsection{Salturi Condiționate}
+\begin{itemize}
+    \item \texttt{jmp eticheta}: Sare necondiționat.
+    \item \texttt{cmp op1, op2}: Compară \texttt{op2} cu \texttt{op1} (setează flag-urile).
+    \item \texttt{j<conditie> eticheta}: Sare dacă condiția e îndeplinită.
+\end{itemize}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ll}
+\toprule
+\textbf{Operator (cu semn)} & \textbf{Descriere} \\
+\midrule
+\texttt{je} & jump if equal (egal) \\
+\texttt{jne} & jump if not equal (diferit) \\
+\texttt{jg} & jump if greater (op2 > op1) \\
+\texttt{jl} & jump if less (op2 < op1) \\
+\texttt{jge} & jump if greater or equal (op2 >= op1) \\
+\texttt{jle} & jump if less or equal (op2 <= op1) \\
+\bottomrule
+\end{tabular}
+\caption{Instrucțiuni de salt condiționat (pentru numere cu semn).}
+\end{table}
+
+\subsection{Simularea Buclelor}
+
+\subsubsection{Metoda 1: Manuală (cu \texttt{cmp} și \texttt{jmp})}
+\begin{lstlisting}[language=x86asm]
+    movl $0, %ecx     # %ecx = 0 (contor, i=0)
+    movl $5, %ebx     # %ebx = 5 (limita, n=5)
+etloop:
+    cmp %ebx, %ecx    # Compară %ecx cu %ebx (i cu n)
+    jge etexit        # Dacă %ecx >= %ebx, ieși (if i >= n, exit)
+    
+    # ... corpul buclei ...
+    
+    addl $1, %ecx     # %ecx = %ecx + 1 (i++)
+    jmp etloop        # Sari înapoi la începutul buclei
+etexit:
+    # ... continuă programul ...
+\end{lstlisting}
+
+\subsubsection{Metoda 2: Instrucțiunea \texttt{loop}}
+Instrucțiunea \texttt{loop} folosește automat \texttt{\%ecx} ca și contor. La fiecare pas, decrementează \texttt{\%ecx} și sare la etichetă dacă \texttt{\%ecx} nu este 0.
+
+\begin{lstlisting}[language=x86asm]
+    movl $5, %ecx     # %ecx = 5 (setează contorul)
+etloop:
+    # ... corpul buclei ...
+    
+    loop etloop       # Decrementează %ecx; dacă %ecx != 0, sare la etloop
+    
+# ... continuă programul ...
+\end{lstlisting}
+
+\section{Inline Assembly în C}
+Putem insera cod Assembly direct într-un program C folosind directiva \texttt{\_\_asm\_\_}.
+
+\begin{lstlisting}[language=c, caption={Exemplu de inline assembly în C}]
+#include <stdio.h>
+
+int x = 1;
+
+int main() {
+    __asm__
+    (
+        "movl x, %eax;"   // %eax = x
+        "addl $1, %eax;"  // %eax = %eax + 1
+        "movl %eax, x;"   // x = %eax
+    );
+    
+    printf("%d\n", x); // Va afișa 2
+    return 0;
+}
+\end{lstlisting}
+
+
+\end{document}
+% --- SFÂRȘIT DOCUMENT ---
