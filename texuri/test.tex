@@ -1,0 +1,55 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usetikzlibrary{circuits.logic.US, positioning, arrows.meta}
+
+% Definirea unui stil pentru a face codul mai curat
+\tikzset{
+  gate style/.style={circuit logic US, draw, thick},
+  input/.style={coordinate}, % Intrările sunt doar puncte invizibile
+  output/.style={coordinate} % Ieșirea este un punct invizibil
+}
+
+\begin{document}
+\begin{tikzpicture}[
+    -Stealth, % Adaugă săgeți la capătul firelor
+    node distance=1.5cm and 2cm % Spațiere verticală și orizontală
+  ]
+
+    % --- 1. Definim Intrările (ca simple coordonate) ---
+    % Folosim 'positioning' pentru a le plasa relativ
+    \node[input] (A) {A};
+    \node[input, below=of A] (B) {B};
+    \node[input, below=of B] (C) {C};
+
+    % --- 2. Definim Porțile ---
+    % Plasăm poarta AND în dreapta intrărilor B și C
+    \node[and gate US, gate style, right=of B] (AND1) {};
+    
+    % Plasăm poarta OR în dreapta porții AND
+    \node[or gate US, gate style, right=of AND1] (OR1) {};
+
+    % --- 3. Definim Ieșirea ---
+    \node[output, right=of OR1] (X) {X};
+
+    % --- 4. Desenăm Firele (Conexiunile) ---
+    
+    % Conectăm B și C la poarta AND1
+    % Folosim sintaxa '--' pentru linii drepte
+    % Folosim sintaxa '|- (ancora)' pentru o linie orizontală apoi verticală
+    \draw (B) -- node[above, pos=0.1] {B} (B -| AND1.input 1);
+    \draw (C) -- node[above, pos=0.1] {C} (C -| AND1.input 2);
+    
+    % Conectăm A la poarta OR1
+    % Notă: Trebuie să ocolim poarta AND1
+    % (A -| OR1.input 1) înseamnă: mergi de la A orizontal până ești
+    % deasupra (sau sub) ancora 'OR1.input 1', apoi mergi vertical.
+    \draw (A) -- node[above, pos=0.1] {A} (A -| OR1.input 1);
+
+    % Conectăm ieșirea porții AND1 la intrarea 2 a porții OR1
+    \draw (AND1.output) -- (OR1.input 2);
+    
+    % Conectăm ieșirea porții OR1 la ieșirea finală X
+    \draw (OR1.output) -- node[above, pos=0.9] {X} (X);
+
+\end{tikzpicture}
+\end{document}

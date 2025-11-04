@@ -655,34 +655,56 @@ Legile de Morgan sunt: $\overline{A+B}=\overline{A}\hspace{0.1cm}\overline{B}$ �
         \item $C + \overline{CB}$
         \item $\overline{AB}(\overline{A} + B)(\overline{B} + \overline{B})$
         \item $\overline{\overline{(A\overline{B})}\overline{(\overline{B} + C)}}$
-        \item 
+        \item $\overline{\overline{(A + \overline{B})}(\overline{B} \cdot C)}$
+        \item $\overline{(\overline{A} + C)\overline{(AB)}}$
     \end{enumerate}
 \end{enumerate}
 
 
 \textbf{4.} Simplificați următoarele expresii logice:
-\begin{enumerate}[label=(\alph*)]
-    \item $A + 0$
-    \item $\overline{A}\cdot 0$
-    \item $A + \overline{A}$
-    \item $A + A$
-    \item $A + AB$
-    \item $A + \overline{A}\cdot B$
-    \item $A(\overline{A} + B)$
-    \item $AB + \overline{A}B$
-    \item $(\overline{A} + \overline{B})(\overline{A} + B)$
-    \item $A(A + B + C + ...)$
-    \item fie
-        \begin{itemize}
-            \item 
+\begin{multicols}{2}
+\begin{enumerate}[label=(\arabic*)]
+    \item $A + 0 \equiv$ \hl{$A$} 
+    \item $\overline{A}\cdot 0 \equiv$ \hl{$0$}
+    \item $A + \overline{A} \equiv$ \hl{$1$}
+    \item $A + A \equiv$ \hl{$A$}
+    \item $A + AB \equiv A(1+B) \equiv$ \hl{$A$}
+    \item $A + \overline{A}\cdot B \equiv$ \hl{$A + B$}
+    \item $A(\overline{A} + B) \equiv$ \hl{$AB$}
+    \item $AB + \overline{A}B \equiv B(A + \overline{A})$ \hl{$B$}
+    \item $(\overline{A} + \overline{B})(\overline{A} + B) \equiv !A + !A \cdot !B + !A \cdot B + !B \cdot B \equiv !A(! + !B + B) + 0 \equiv$ \hl{$!A$}
+    \item $A(A + B + C + ...) \equiv$ \hl{$A$}
+    \item fie $f(A, B, C) = A + B + C$
+        \begin{itemize}[label=i.*]
+            \item $f(A, B, AB) \equiv A(1 + B) + B \equiv$ \hl{$A + B$}
+            \item $f(A, B, \overline{A}\cdot\overline{B}) \equiv (A + B) + \overline{(A + B)} \equiv$ \hl{$1$}
+            \item $f(A, B, \overline{AB}) \equiv (A + !A) + (B + !B)$ \hl{$1$}
         \end{itemize}
-    \item $A + A\overline{A}$
-    \item $AB + A\overline{B}$
+    \item $A + A \cdot \overline{A} \equiv A(1+\overline{A})$ \hl{$A$}
+    \item $AB + A\overline{B} \equiv A(B + \overline{B}) \equiv$ \hl{$A$}
+    \item $\overline{A} +  B \cdot \overline{A} \equiv !A(1 + B)$ \hl{$!A$}
+    \item $(D + \overline{A} + B + \overline{C})B \equiv $ \hl{$B$}
+    \item $(A + \overline{B})(A + B) \equiv A + A \cdot \overline{B} + A \cdot B + B \cdot \overline{B} \equiv A(1 + B + \overline{B}) + 0 \equiv $ \hl{$A$}
+    \item $C(C + CD) \equiv C^2(1 + D) \equiv$ \hl{$C$}
+    \item $A(A + AB) \equiv A^2(1 + B) \equiv$ \hl{$A$}
+    \item $\overline{!A + !A} \equiv !(!A) \equiv$ \hl{$A$}
+    \item $\overline{A + !A} \equiv !1 \equiv $ \hl{$0$}
+    \item $D + (D \cdot \overline{C} \cdot B \cdot A) \equiv $ \hl{$D$} 
+    \item $!D \cdot \overline{(DCBA)} \equiv !D(!D + !C + !B + !A) \equiv$ \hl{$D$}
+    % aici corect4
+    \item $AC + \overline{A} \cdot B + BC \equiv $
+    \item $(A + C)(\overline{A} + B)(B + C) \equiv $
+    \item $\overline{A} + \overline{B} + A \cdot B \cdot \overline{C} \equiv $
+    \item $(A + C)(A \cdot D + A \cdot \overline{D}) + AC + C \equiv $
+    \item $\overline{A} \cdot (A + B) + (B + AA)(A + \overline{B}) \equiv $
+    \item $(A + B)^2 + (A + B)^3 + A + 3\overline{A} + A^3 \equiv (A + B) + (A + B) + (A + 3\overline{A} + A) \equiv (A + B) + (A + \overline{A}) \equiv A + B + 1 \equiv $ \hl{$1$}
 \end{enumerate}
+\end{multicols}
 
-
-\textbf{5.}
-
+\textbf{5.} Multiplexare; cerințe:
+\begin{enumerate}[label=(\alph*)]
+    \item presupunem că avem un MUX cu două intrări binare și un semnal
+\end{enumerate}
 
 \textbf{6.}
 
