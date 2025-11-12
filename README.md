@@ -19,3 +19,4 @@ ls
 | `sinteza_lab_asc` | Rezumat cuprinzător al materiei de laborator |
 | `cheat_sheet_curs_asc` | Notițe, pe scurt, pentru examenul scris |
 | `curs_asc` | Materia de curs integrală |
+
